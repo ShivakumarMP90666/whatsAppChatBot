@@ -1,55 +1,70 @@
-# Python Automated Bulk WhatsApp Messages
+# WhatsApp Bulk Message Automation
 
-It is a python script that sends WhatsApp message automatically from WhatsApp web application. It can be configured to send advertising messages to customers. It read data from a Google sheet and send a configured message to people.
+This project automates the process of sending bulk messages through WhatsApp Web using Python and Selenium. It also includes options for attaching images and polls to the messages.
+
+## Features
+
+- **Bulk Messaging**: Send messages to multiple contacts listed in a Google Sheet.
+- **Image Attachment**: Optionally attach an image to each message.
+- **Poll Attachment**: Optionally attach a poll with customizable options.
 
 ## Prerequisites
 
-In order to run the python script, your system must have the following programs/packages installed and the contact number either should be saved in your phone or could be a new number.
-* Python >= 3.8: Download it from https://www.python.org/downloads
-* Selenium Web Driver: Either you can use repo driver else you can download it https://chromedriver.chromium.org/downloads
-* Google Chrome : Download it from https://www.google.com/chrome
-* Pandas : Run in command prompt **pip install pandas**
-* Xlrd : Run in command prompt **pip install xlrd**
-* Openpyxl : Run in command prompt **pip install openpyxl**
-* Selenium: Run in command prompt **pip install selenium** 
+- Python 3.7 or later
+- Google Chrome browser
+- ChromeDriver (managed automatically by `webdriver_manager`)
+- WhatsApp account
 
-## Approach
-* User scans web QR code to log in into the WhatsApp web application for the new session.
-* The script reads a customized message from the Google sheet.
-* The script reads rows one by one and searches that contact number in the web search box if the contact number found on WhatsApp then it will send a configured message otherwise it creates url for new number. Then it reads next row. 
-* Loop execute until and unless all rows complete.
+## Installation
 
-## Process
-* Clone this repository
-```commandline
-git clone https://github.com/arkisoul/whatsapp-bulk-message-automation
+1. Clone the repository:
+
+   ```bash
+   git clone <your-repo-url>
+   cd <your-repo-directory>
+   ```
+
+2. Install the required Python packages:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+## Usage
+
+### Command-Line Arguments
+
+- `sheet_name`: The name of the Google Sheet containing the contacts and messages (required).
+- `--image-path`: The full path to the image to be attached (optional).
+- `--attach-poll`: The name of the Google Sheet containing poll data (optional).
+
+### Example
+
+```bash
+python app.py "YourSheetName" --image-path="H:/HLT.png" --attach-poll="PollSheetName"
 ```
-* Change directory
-```commandline
-cd whatsapp-bulk-message-automation
-```
-* Use any virtualenv for python venv, pipenv, conda and install application dependencies
-```commandline
-pip install -e requirements.txt
-```
-* Use below command to send bulk message
-    * Without attachment
-        ```commandline
-        python app/app.py SHEET_ID SHEET_NAME SHEET_GID
-        ```
-    * With attachment
-        ```commandline
-        python app/app.py --image-path='absolute/path/to/the/image' SHEET_ID SHEET_NAME SHEET_GID
-        ```
-    
-### Google Sheet Reference
-Example Google sheet for your reference
-https://docs.google.com/spreadsheets/d/1fB1UHWOHXGTWQJ208UEiermUZ6MfOTZpqI_Tea8Vwqw/edit#gid=1484715859
-* Google Sheet ID = 1fB1UHWOHXGTWQJ208UEiermUZ6MfOTZpqI_Tea8Vwqw
-* Google Sheet Name = Customers
-* Google Sheet Gid = 1484715859
 
-Note: The script may not work in case if the HTML of web WhatsApp is changed.
+### Google Sheet Structure
 
-### Inspiration
-This script is inspired from @inforkgodara [repo](https://github.com/inforkgodara/python-automated-bulk-whatsapp-messages) and updated to read a Google sheet and send to any whatsapp number.
+- The Google Sheet should have the following columns:
+  - `Contact`: The phone number of the recipient (with or without the country code).
+  - `Message`: The message to be sent.
+
+- For polls, the poll sheet should have:
+  - `Question`: The poll question.
+  - Columns for each poll option.
+
+## Notes
+
+- The script will prompt you to scan the WhatsApp Web QR code upon the first run.
+- Ensure that the contacts are in the correct format (e.g., starting with `+91` for India).
+
+## Troubleshooting
+
+- **Image Not Attaching**: Ensure that the image path is correct and accessible.
+- **Timeout Errors**: Increase the wait times or ensure a stable internet connection.
+
+## License
+
+This project is licensed under the MIT License.
+```
