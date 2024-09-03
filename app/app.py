@@ -16,22 +16,6 @@ import time
 import argparse
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
-# import autoit
-
-sys.path.append('C:/Users/Asus/AppData/Roaming/Python/Python312/site-packages')
-
-try:
-    import autoit as autoit
-except ImportError:
-    print("Error: The 'autoit' module is not installed. Please install it.")
-    sys.exit(1)
-
-'''
-try:
-    import autoit
-except ModuleNotFoundError:
-    pass
-'''
 
 class WhatsappMessage:
     """
@@ -129,7 +113,8 @@ class WhatsappMessage:
     def attach_image(self):
         if self.image_path is not None:
             print('Attaching image...')
-            attachment_button_path = "//span[@class='xqmb7z']"
+            attachment_button_path = "//div[@title='Attach']"
+            image_input_xpath = "//input[@accept='image/*,video/mp4,video/3gpp,video/quicktime']"
 
             try:
                 # Wait for the attachment button to be clickable
@@ -139,34 +124,25 @@ class WhatsappMessage:
                 attachment_button.click()
                 time.sleep(2)  # Wait for the options to appear
 
-                photos_button_path = "//span[normalize-space()='Photos & videos']"
-                photos_button = self.driver_wait.until(
-                    EC.element_to_be_clickable((By.XPATH, photos_button_path))
-                )
-                photos_button.click()
-                time.sleep(2)  # Wait for the file dialog to appear
+                # Find the image input element and send the file path to it
+                image_input = self.driver.find_element(By.XPATH, image_input_xpath)
+                image_input.send_keys(self.image_path)
+                time.sleep(5)  # Wait for the image to upload
 
-                try:
-                    print('Opening file dialog...')
-                    file_path = os.path.normpath(self.image_path)  # Normalize the path for the OS
-                    autoit.control_focus("Open", "Edit1")
-                    time.sleep(1)
-                    autoit.control_set_text("Open", "Edit1", file_path)
-                    time.sleep(1)
-                    autoit.control_click("Open", "Button1")
-                    time.sleep(5)  # Wait for the image to upload
-                except Exception as e:
-                    print('Failed to attach image:', e)
-                    traceback.print_exc()
+                # Click the send button
+                send_button_xpath = "//span[@data-icon='send']"
+                send_button = self.driver.find_element(By.XPATH, send_button_xpath)
+                send_button.click()
+                time.sleep(2)
 
             except TimeoutException as e:
-                print("Failed to find the attachment button or the photos button within the given time.", e)
+                print("Failed to attach image within the given time.", e)
                 traceback.print_exc()
 
     def attach_poll(self):
         if self.poll_data is not None:
             print('Attaching poll...')
-            attachment_button_path = "//span[@class='xqmb7z']"
+            attachment_button_path = "//div[@title='Attach']"
 
             try:
                 # Wait for the attachment button to be clickable
